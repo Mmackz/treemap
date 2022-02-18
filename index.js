@@ -17,6 +17,9 @@ const colors = d3.scaleOrdinal(d3.schemeCategory10);
 // setup treemap
 const treemap = d3.treemap().size([width, height]).paddingInner(1);
 
+// add title
+chartContainer.append("div").lower().attr("class", "title-container").append("h1").attr("id", "title").text("Movie box-office sales")
+d3.select(".title-container").append("p").attr("id", "description").text("'Top 100 Highest Grossing Movies Grouped By Genre'")
 d3.json(movieData).then((data) => {
    const root = d3
       .hierarchy(data)
@@ -30,11 +33,15 @@ d3.json(movieData).then((data) => {
    // add data
    dataCell
       .append("rect")
+      .attr("class", "tile")
+      .attr("data-name", ({ data }) => data.name)
+      .attr("data-category", ({ data }) => data.category)
+      .attr("data-value", ({ data }) => data.value)
       .attr("x", (d) => d.x0)
       .attr("y", (d) => d.y0)
       .attr("width", (d) => d.x1 - d.x0)
       .attr("height", (d) => d.y1 - d.y0)
-      .attr("fill", (d) => colors(d.data.category))
+      .attr("fill", ({ data }) => colors(data.category))
       .style("overflow", "hidden")
       .on("mouseenter", (event, data) => {
          console.log(data);
@@ -54,5 +61,6 @@ d3.json(movieData).then((data) => {
       .append("tspan")
       .attr("x", (d) => d.x + 2)
       .attr("y", (d) => d.y + 10)
-      .text((d) => d.word).style("font-size", "0.5rem");
+      .text((d) => d.word)
+      .style("font-size", "0.5rem");
 });
