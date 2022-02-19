@@ -47,7 +47,7 @@ chartContainer
 d3.select(".title-container")
    .append("p")
    .attr("id", "description")
-   .text("'Top 100 Highest Grossing Movies Grouped By Genre'");
+   .text("Top 100 Highest Grossing Movies Grouped By Genre");
 d3.json(movieData).then((data) => {
 
    // remove duplicate entry for Twilight: Breaking Dawn
