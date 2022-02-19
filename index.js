@@ -1,16 +1,17 @@
 // data files
-const gameData =
-   "https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/video-game-sales-data.json";
-
 const movieData =
    "https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/movie-data.json";
 
 // setup chart
 const height = 600;
-const width = 960;
-const legendWidth = 500;
+const width = 1000;
+const legendWidth = 400;
 const chartContainer = d3.select(".chart");
-const chart = chartContainer.append("svg").attr("height", height).attr("width", width);
+const chart = chartContainer
+   .append("svg")
+   .attr("class", "treemap")
+   .attr("height", height)
+   .attr("width", width);
 
 // color scheme
 const colors = d3.scaleOrdinal(d3.schemeCategory10);
@@ -48,6 +49,11 @@ d3.select(".title-container")
    .attr("id", "description")
    .text("'Top 100 Highest Grossing Movies Grouped By Genre'");
 d3.json(movieData).then((data) => {
+
+   // remove duplicate entry for Twilight: Breaking Dawn
+   const indexToRemove = data.children[2].children.findIndex(d => d.name.includes("Breaking Dawn"));
+   data.children[2].children = data.children[2].children.filter((d, i) => i !== indexToRemove);
+
    const root = d3
       .hierarchy(data)
       .sum((d) => d.value)
@@ -97,15 +103,15 @@ d3.json(movieData).then((data) => {
       .style("font-size", "0.5rem");
 
    // add legend
-   const genres = data.children.map(item => item.name)
-   console.log(genres)
+   const genres = data.children.map((item) => item.name);
+   console.log(genres);
 
    const legend = chartContainer
       .append("svg")
       .attr("id", "legend")
       .attr("class", "legend")
       .attr("width", legendWidth)
-      .attr("height", 400);
+      .attr("height", 100);
 
    legend
       .append("g")
@@ -113,13 +119,25 @@ d3.json(movieData).then((data) => {
       .data(genres)
       .enter()
       .append("g")
+      .attr("class", "legend-item-container")
       .style("transform", (d, i) => {
-         return `translate(${(i % 3) * (legendWidth / 3)}px, ${Math.floor(i / 3) * 24}px)`
+         return `translate(${(i % 3) * (legendWidth / 3) + 16}px, ${
+            Math.floor(i / 3) * 24 + 30
+         }px)`;
       })
       .append("rect")
       .attr("class", "legend-item")
       .attr("fill", (d) => colors(d))
       .attr("width", 18)
       .attr("height", 18);
-   d3.selectAll(".legend-item").append("text").text(d=> d).style("transform", "translate(22px, 16px)")
+
+   d3.selectAll(".legend-item-container")
+      .append("text")
+      .text((d) => d)
+      .style("transform", "translate(22px, 16px)");
+   legend
+      .append("text")
+      .text("Legend")
+      .attr("class", "legend-title")
+      .style("transform", "translate(172px, 20px)");
 });
