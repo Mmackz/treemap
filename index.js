@@ -1,4 +1,4 @@
-// data files
+// data file
 const movieData =
    "https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/movie-data.json";
 
@@ -84,7 +84,7 @@ d3.json(movieData).then((data) => {
       })
       .on("mouseout", tip.hide);
 
-   // add label
+   // add labels
    dataCell
       .append("text")
       .attr("class", "cell-label")
@@ -104,8 +104,6 @@ d3.json(movieData).then((data) => {
 
    // add legend
    const genres = data.children.map((item) => item.name);
-   console.log(genres);
-
    const legend = chartContainer
       .append("svg")
       .attr("id", "legend")
